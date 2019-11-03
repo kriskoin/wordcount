@@ -2,10 +2,22 @@
 # Compiling and Running
 You need a C++ compiler. GNU g++ is probably the best choice. Check that it is installed (by typing g++ at the prompt). If it is not installed yet, install it!
 
+## Create a Make File
+CC = g++
+HADOOP_INSTALL = /home/hadoop/hadoop
+PLATFORM = Linux-i386-32
+CPPFLAGS = -m32 -I$(HADOOP_INSTALL)/c++/$(PLATFORM)/include
+
+wordcount: wordcount.cpp
+	$(CC) $(CPPFLAGS) $< -Wall -L$(HADOOP_INSTALL)/c++/$(PLATFORM)/lib -lhadooppipes \
+	-lhadooputils -lpthread -g -O2 -o $@
+
+
+
 ## Copy the executable file (wordcount) to the bin directory in HDFS:
   hadoop dfs -mkdir bin                    (Note: it should already exist!)
   hadoop dfs -put  wordcount   bin/wordcount
-
+ 
 ## Run the program!
   hadoop pipes -D hadoop.pipes.java.recordreader=true  \ 
                    -D hadoop.pipes.java.recordwriter=true \
